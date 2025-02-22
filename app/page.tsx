@@ -14,7 +14,7 @@ export default function HomePage() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-bold mb-2">
-        Welcome to St. Mary's Catholic Church
+        Welcome to St. Kizito's Catholic Church
       </h1>
       <p className="text-xl text-muted-foreground mb-8">
         Serving our community in faith, hope, and love

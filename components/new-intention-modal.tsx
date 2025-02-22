@@ -37,25 +37,27 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
+// Define Zod Schema
 const formSchema = z.object({
-  date: z.date({
-    required_error: "A date is required.",
-  }),
+  date: z.date({ required_error: "A date is required." }),
   time: z.string().min(1, { message: "Time is required" }),
-  intention: z.string().min(10, {
-    message: "Intention must be at least 10 characters.",
-  }),
+  intention: z.string().min(10, { message: "Intention must be at least 10 characters." }),
 });
 
 export default function NewIntentionModal() {
   const [open, setOpen] = useState(false);
 
+  // ✅ FIX: Provide default values to prevent uncontrolled input warning
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      date: new Date(),  // Ensure date starts with a valid value
+      time: "",          // Default empty string for time input
+      intention: "",     // Default empty string for intention
+    },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // This is where you would typically send the data to your API
     console.log(values);
     setOpen(false);
     toast.success("Intention submitted successfully");
@@ -70,9 +72,7 @@ export default function NewIntentionModal() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Submit New Mass Intention</DialogTitle>
-          <DialogDescription>
-            Enter the details for your new Mass intention here.
-          </DialogDescription>
+          <DialogDescription>Enter the details for your new Mass intention here.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -86,17 +86,13 @@ export default function NewIntentionModal() {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant="outline"
                           className={cn(
                             "w-[240px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -106,20 +102,12 @@ export default function NewIntentionModal() {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date() ||
-                          date >
-                            new Date(
-                              new Date().setMonth(new Date().getMonth() + 3)
-                            )
-                        }
+                        disabled={(date) => date < new Date() || date > new Date(new Date().setMonth(new Date().getMonth() + 3))}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormDescription>
-                    Select the date for your Mass intention.
-                  </FormDescription>
+                  <FormDescription>Select the date for your Mass intention.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -133,9 +121,7 @@ export default function NewIntentionModal() {
                   <FormControl>
                     <Input type="time" placeholder="Select time" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Choose the time for the Mass.
-                  </FormDescription>
+                  <FormDescription>Choose the time for the Mass.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -147,15 +133,9 @@ export default function NewIntentionModal() {
                 <FormItem>
                   <FormLabel>Intention</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Enter your Mass intention here"
-                      className="resize-none"
-                      {...field}
-                    />
+                    <Textarea placeholder="Enter your Mass intention here" className="resize-none" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Describe your intention for this Mass.
-                  </FormDescription>
+                  <FormDescription>Describe your intention for this Mass.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
