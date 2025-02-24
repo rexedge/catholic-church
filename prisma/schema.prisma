@@ -12,3 +12,183 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// MODELS
+model Parish {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  address      String   @unique
+  city         String
+  state        String
+  country      String   @default("Nigeria")
+  phoneNumber  String?  @unique
+  email        String?  @unique
+  website      String?  @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  masses      Mass[]
+  events      Event[]
+  payments     Payment[]
+}
+model User {
+  id          String    @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  phoneNumber String    @unique
+  password    String
+  role        Role      @default(PARISHIONER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  parish     Parish?    @relation(fields: [parishId], references: [id])
+  parishId   String?
+
+  masses       Mass[]       
+  intentions   Intention[]
+  thanksgivings Thanksgiving[]
+  events       Event[]
+  payments    Payment[]
+}
+
+model Mass {
+  id            String      @id @default(uuid())
+  title         String
+  description   String?
+  date          DateTime
+  time          DateTime
+  churchLocation String
+  livestreamLink String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  priest      User        @relation(fields: [priestId], references: [id])
+  priestId    String
+  parish      Parish      @relation(fields: [parishId], references: [id])
+  parishId    String
+  intentions  Intention[]
+  thanksgivings Thanksgiving[]
+  liveStreams LiveStream[]
+}
+
+model Intention {
+  id          String   @id @default(uuid())
+  intentionText String
+  status      Status   @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  mass    Mass  @relation(fields: [massId], references: [id])
+  massId  String
+  user    User  @relation(fields: [userId], references: [id])
+  userId  String
+}
+
+model Thanksgiving {
+  id               String   @id @default(uuid())
+  thanksgivingReason String
+  status           Status   @default(PENDING)
+  willAttend       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  mass   Mass  @relation(fields: [massId], references: [id])
+  massId String
+  user   User  @relation(fields: [userId], references: [id])
+  userId String
+  payment Payment[]
+}
+
+model Event {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  date         DateTime
+  time         DateTime
+  location     String
+  livestreamLink String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  organizer   User       @relation(fields: [organizerId], references: [id])
+  organizerId String
+  parish      Parish      @relation(fields: [parishId], references: [id])
+  parishId    String
+  liveStreams LiveStream[]
+}
+
+model Payment {
+  id                 String         @id @default(uuid())
+  amount             Decimal
+  status             DonationStatus @default(PENDING)
+  transactionReference String       @unique
+  paymentType      PaymentType
+  paymentMethod      PaymentMethod
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  user   User  @relation(fields: [userId], references: [id])
+  userId String
+  parish      Parish      @relation(fields: [parishId], references: [id])
+  parishId    String
+  thanksgiving Thanksgiving? @relation(fields: [thanksgivingId], references: [id]) // Link to Thanksgiving
+  thanksgivingId String?     
+}
+
+model LiveStream {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  streamUrl   String
+  startTime   DateTime
+  endTime     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations (either Mass or Event)
+  mass   Mass?  @relation(fields: [massId], references: [id])
+  massId String?
+  event  Event? @relation(fields: [eventId], references: [id])
+  eventId String?
+}
+
+
+//ENUMS
+enum Role {
+  PARISHIONER
+  PRIEST
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  DECLINED
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  CREDIT_CARD
+  MOBILE_MONEY
+}
+
+enum PaymentType {
+  DONATION
+  THANKSGIVING
+  CHARITY
+}
