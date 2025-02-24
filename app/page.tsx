@@ -14,7 +14,7 @@ export default function HomePage() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-bold mb-2">
-        Welcome to St. Kizito's Catholic Church
+        Welcome to St. Kizito&apos;s Catholic Church
       </h1>
       <p className="text-xl text-muted-foreground mb-8">
         Serving our community in faith, hope, and love
@@ -106,7 +106,7 @@ export default function HomePage() {
       <div className="grid gap-6 md:grid-cols-2 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>This Week's Readings</CardTitle>
+            <CardTitle>This Week&apos;s Readings</CardTitle>
             <CardDescription>
               Prepare for the upcoming Sunday Mass
             </CardDescription>
@@ -160,10 +160,10 @@ export default function HomePage() {
         </CardHeader>
         <CardContent>
           <blockquote className="italic border-l-4 border-muted-foreground pl-4 py-2 mb-4">
-            "Let us ask the Lord for the grace not to hesitate when the Spirit
-            calls us to take a step forward. Let us ask for the apostolic
+            &quot;Let us ask the Lord for the grace not to hesitate when the
+            Spirit calls us to take a step forward. Let us ask for the apostolic
             courage to share the Gospel with others and to stop trying to make
-            our Christian life a museum of memories."
+            our Christian life a museum of memories.&quot;
           </blockquote>
           <p className="text-sm text-muted-foreground">- Pope Francis</p>
         </CardContent>
