@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button"
 
 // Define type for an intention
 interface Intention {
-  id: number
-  name: string
-  intention: string
-  date: string
-  status: string // Define the possible statuses
+  id: number;
+  name: string;
+  intention: string;
+  date: string;
+  status: StatusI; // Define the possible statuses
 }
 
 // Define props for IntentionList component
 interface IntentionListProps {
-  intentions: Intention[]
-  onUpdateStatus: (id: number, status: string) => void
+  intentions: Intention[];
+  onUpdateStatus: (id: number, status: StatusI) => void;
 }
 
 export default function IntentionList({ intentions, onUpdateStatus }: IntentionListProps) {

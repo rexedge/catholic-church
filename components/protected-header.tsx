@@ -7,7 +7,7 @@ export default function ProtectedHeader() {
     <header className="bg-primary text-primary-foreground">
       <div className="container mx-auto py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">
-          St. Mary's{" "}
+          St. Mary&apos;s{" "}
           <span className="hidden md:inline-block">Catholic Church</span>
         </Link>
         <nav className="flex items-center space-x-4">
