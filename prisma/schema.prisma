@@ -43,6 +43,8 @@ model User {
   role        Role      @default(PARISHIONER)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  resetToken        String?
+  resetTokenExpiry  DateTime?
 
   // Relations
   parish     Parish?    @relation(fields: [parishId], references: [id])
